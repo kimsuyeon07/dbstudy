@@ -1,3 +1,7 @@
+drop table employee;
+drop table department;
+
+
 CREATE TABLE department
 (
     dept_no NUMBER(1),
@@ -64,3 +68,92 @@ SELECT
      , e.salary
   FROM employee e 
  CROSS JOIN department d;
+ 
+--------------------------------------------------------------------------------
+
+-- 내부 조인
+-- INNER JOIN
+-- 양쪽 테이블에 모두 존재하는 데이터만 조인하는 것
+
+-- 1) INNER JOIN 사용  and  ON절 사용
+select 
+       e.emp_no
+     , e.name
+     , d.dept_name
+     , e.position
+     , e.hire_date
+     , e.salary
+  from employee e inner join department d
+    on e.depart = d.dept_no;  -- department(PK) = employee(FK) 식.
+-- 2) FROM절에 ','사용  and  WHERE절 사용 
+select 
+       e.emp_no
+     , e.name
+     , d.dept_name
+     , e.position
+     , e.hire_date
+     , e.salary
+  from employee e, department d
+ where e.depart = d.dept_no;
+ 
+--------------------------------------------------------------------------------
+
+-- 외부 조인
+-- OUTER JOIN
+
+-- 외부 조인 연습을 위한 데이터 추가
+-- '참조 무결성'에 의해 아래 데이터를 삽입되지 않는다.
+-- 잠시 외래키 제약조건 (employee_department_pk)를 비활성화한다.
+
+alter table employee disable constraint emp_datp_fk;
+INSERT INTO employee values (1005, '김미나', 5, '사원', 'F', '18-05-01', '1800000');
+
+ 
+-- 외부 조인
+-- 모든 사원의 emp_no, name, dept_name, position을 출력하시오. 
+
+select 
+       e.emp_no
+     , e.name
+     , d.dept_name
+  from employee e left outer join department d
+    on e.depart = d.dept_no;
+    
+    
+select 
+       e.emp_no
+     , e.name
+     , d.dept_name
+  from employee e, department d
+ where e.depart = d.dept_no(+);
+ 
+ 
+select 
+       e.emp_no
+     , e.name
+     , d.dept_name
+  from department d right outer join employee e
+    on d.dept_no = e.depart;
+
+
+select 
+       e.emp_no
+     , e.name
+     , d.dept_name
+  from department d, employee e
+ where d.dept_no(+) = e.depart;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
