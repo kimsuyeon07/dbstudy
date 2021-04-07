@@ -197,13 +197,100 @@ select last_name
 
               
 -- 12. MANAGER가 아닌 사원들의 정보를 조회하시오.
--- MANAGER는 MANAGER_ID를 가지고 있다.
+-- MANAGER는 MANAGER_ID를 가지고 있다.;
+
+/* ↓ manager 넘버 출력. : 중복 제거
+select distinct manager_id
+  from employees; */
+  
+select employee_id
+     , last_name
+  from employees
+ where employee_id NOT IN (select distinct manager_id
+                             from employees
+                            where manager_id IS NOT NULL);
+
+ 
+
+
+
 
 
 -- 13. 근무지가 'Southlake'인 사원들의 정보를 조회하시오.
+-- 근무지 : city (location) 
+-- 서브쿼리1 : 근무지가 'Southlake'인 location_id를 locations테이블에서 조회
+-- 서브쿼리2 : locations테이블 >> departments테이블 >> employees테이블
+
+/* 서브쿼리1 */
+select location_id
+  from locations
+ where city = 'Southlake';
+ 
+-- 1) 서브쿼리
+select last_name
+     , employee_id
+  from employees e
+ where (select location_id
+          from departments d 
+         where d.department_id = e.department_id) in(select location_id
+                                                       from locations
+                                                      where city = 'Southlake');
+ 
+ 
+-- 2) 내부조인
+select e.last_name
+     , e.employee_id
+  from locations l, departments d, employees e
+ where l.location_id = d.location_id
+   and d.department_id = e.department_id
+   and l.city = 'Southlake';
+ 
+ 
+ 
+ 
+
+
+
 
 
 -- 14. 부서명의 가나다순으로 모든 사원의 정보를 조회하시오.
+-- 부서명 : department_name -> departments테이블
+-- 가나다순 : (오름차순) ORDER BY
+-- 사원 정보 : employees테이블
+
+-- 서브쿼리 사용
+select employee_id
+     , last_name
+  from employees e
+ order by (select d.department_name
+             from departments d
+            where d.department_id = e.department_id);
+
+
+
 
 
 -- 15. 가장 많은 사원들이 근무하고 있는 부서의 번호와 근무하는 인원수를 조회하시오.
+-- 근무 중인 부서의 사원수
+-- 최대 인원이 근무하는 사원수
+
+/* 그룹핑 : 각 부서별 사원의 총 수 */
+select department_id
+     , count(*) as 부서별사원수
+  from employees
+ group by department_id;
+                    
+                    
+select department_id
+     , count(*) as 부서별사원수
+  from employees
+ where department_id IS NOT NULL
+ group by department_id
+having count(*) = (select max(count(*)) 
+                     from employees 
+                    group by department_id );
+ 
+ 
+
+
+
