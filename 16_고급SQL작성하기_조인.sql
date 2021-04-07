@@ -103,9 +103,9 @@ select
 
 -- 외부 조인 연습을 위한 데이터 추가
 -- '참조 무결성'에 의해 아래 데이터를 삽입되지 않는다.
--- 잠시 외래키 제약조건 (employee_department_pk)를 비활성화한다.
+-- 잠시 외래키 제약조건 (employee_department_fk)를 비활성화한다.
 
-alter table employee disable constraint emp_datp_fk;
+alter table employee disable constraint emp_dept_fk;
 INSERT INTO employee values (1005, '김미나', 5, '사원', 'F', '18-05-01', '1800000');
 
  
@@ -144,12 +144,80 @@ select
  where d.dept_no(+) = e.depart;
 
 
+-----------------------------------------------------------------
+
+-- 연습문제
+-- 문제. 아래와 같이 조회하시오
+/*
+    dept_no  사원수
+    1        2
+    2        2
+    3        0
+    4        0
+*/
+
+select 
+       d.dept_no
+     , count(e.depart) as 사원수
+  from department d left outer join employee e
+    on e.depart = d.dept_no
+ group by e.depart, d.dept_no;
+ 
+----------------------------------------------------------------------------------
+
+
+-- 리뷰1. 모든 사원들의 name, dept_name을 조회하시오. (부서가 없는 사원은 조회하지 마시오.)
+select
+       e.name
+     , d.dept_name
+  from department d inner join employee e -- 내부조인
+    on d.dept_no = e.depart;
+    
+    
+select
+       e.name
+     , d.dept_name
+  from department d, employee e -- 내부조인
+ where d.dept_no = e.depart;
 
 
 
 
+-- 리뷰2. '서울'에서 근무하는 사원들의 emp_no, name을 조회하시오.
+select
+       e.emp_no
+     , e.name
+  from department d inner join employee e
+    on d.dept_no = e.depart
+ where d.location = '서울';
+ 
+ 
+select
+       e.emp_no
+     , e.name
+  from department d , employee e
+ where d.dept_no = e.depart
+   and d.location = '서울';
 
 
+
+
+-- 리뷰3. 모든 사원들의 emp_no, name, dept_name (부서가 없는 사원도 조회하시오.)
+select
+       e.emp_no
+     , e.name
+     , d.dept_name
+ from department d right outer join employee e
+   on d.dept_no = e.depart;
+   
+   
+select
+       e.emp_no
+     , e.name
+     , d.dept_name
+ from department d , employee e
+ where d.dept_no(+) = e.depart;  -- (+)가 있는 테이블은 일치하는 정보만 조회, (+)가 없는 테이블은 전체 조회
+ 
 
 
 
