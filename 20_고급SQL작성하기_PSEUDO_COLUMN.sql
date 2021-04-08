@@ -123,7 +123,7 @@ create table board
     board_no number,
     b_title varchar2(20),
     b_content varchar2(100),
-    member_no number,
+    m_id varchar2(20),
     b_date date
 );
 
@@ -153,28 +153,32 @@ nocache;
 alter table member add constraint member_pk primary key(member_no);
 alter table board add CONSTRAINT board_pk primary key(board_no);
 -- FK
-alter table board add constraint board_member_fk foreign key(member_no) REFERENCES member(member_no);
+alter table member modify m_id varchar2(20) NOT NULL UNIQUE;
+alter table board add constraint board_member_fk foreign key(m_id) REFERENCES member(m_id);
 -- insert
-insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'aaa', 'james', SYSDATE);
-insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'bbb', 'alice', SYSDATE);
-insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'ccc', 'brown', SYSDATE);
-insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'ddd', 'jadu', SYSDATE);
-insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'eee', 'crown', SYSDATE);
+insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'aaa', 'james', '21-04-01');
+insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'bbb', 'alice', '21-04-02');
+insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'ccc', 'brown', '21-04-03');
+insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'ddd', 'jadu', '21-04-04');
+insert into member (member_no, m_id, m_name, m_hire_date) values (member_seq.nextval, 'eee', 'crown', '21-04-05');
 
-insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, '어린왕자', '어느날...', 100001, SYSDATE);
-insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, 'ㄱ제목2', '내용2', 100004, SYSDATE);
-insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, 'ㄴ제목3', '내용3', 100002, SYSDATE);
-insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, 'ㄷ제목4', '내용4', 100004, SYSDATE);
-insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, 'ㄹ제목5', '내용5', 100003, SYSDATE);
+insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, '어린왕자', '어느날...', 'aaa', '21-04-01');
+insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, 'ㄱ제목2', '내용2', 'ccc', '21-04-02');
+insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, 'ㄴ제목3', '내용3', 'eee', '21-04-03');
+insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, 'ㄷ제목4', '내용4', 'ddd', '21-04-04');
+insert into board (board_no, b_title, b_content, member_no, b_date) values (board_seq.nextval, 'ㄹ제목5', '내용5', 'bbb', '21-04-05');
 
 select * from board;
 select * from member;
 
 
+
 -- 제약조건 삭제
 alter table board drop CONSTRAINT board_member_fk;
 alter table board drop constraint board_pk;
+alter table board drop constraint member_pk;
 drop table board;
+drop table member;
 
 -- 4. 게시판을 글제목의 가나다 순으로 정렬하고 첫 번째글을 조회한다.
 select b.board_no
@@ -222,18 +226,53 @@ select a.*
                      , member_no
                      , b_date
                   from board
-                 order by b_date desc) b) a
+                 order by b_date desc) b) a  -- desc : 내림차순
  where a.rn between 3 and 5;
 
 
 
 -- 7. 가장 먼저 가입한 회원을 조회한다.
+-- 가입일을 기준으로 오름차순 정렬하고 첫 번째 항목을 조회한다.
+select m.*
+  from (select *
+          from member
+          order by m_hire_date)  m
+ where rownum = 1;
 
 
 
 
 -- 8. 3번째로 가입한 가입한 회원을 조회한다.
+-- 가입일을 기준으로 오름차순 정렬
+-- rownum의 별명 선언
+select b.member_no
+     , b.m_id
+     , b.m_name
+     , b.m_hire_date
+  from (select a.member_no
+             , a.m_id
+             , a.m_name
+             , a.m_hire_date
+             , rownum as rn
+          from (select member_no
+                     , m_id
+                     , m_name
+                     , m_hire_date
+                  from member 
+                 order by m_hire_date) a) b
+ where b.rn = 3;
+
+
+
 -- 9. 가장 나중에 가입한 회원을 조회한다.
+select m.*
+  from (select member_no
+             , m_id
+             , m_name
+             , m_hire_date
+          from member
+         order by m_hire_date desc) m
+ where rownum = 1;
 
 
 
