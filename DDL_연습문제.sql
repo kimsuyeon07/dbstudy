@@ -1,3 +1,6 @@
+drop table MEMBERS;
+drop table BOARDs;
+
 -- 1. 다음 칼럼 정보를 이용하여 MEMBERS 테이블을 생성하시오.
 --    1) 회원번호: NO, NUMBER
 --    2) 회원아이디: ID, VARCHAR2(30), 필수, 중복 불가
@@ -85,5 +88,11 @@ alter table board rename constraint SYS_C007200 to board_title_nn;
 -- 테이블 이름 변경
 -- board -> boards
 rename board to boards;
+
+alter table BOARDs drop constraint board_member_fk;
+alter table BOARDs drop constraint board_pk;
+alter table BOARDs drop constraint members_pk;
+
+
 
 
