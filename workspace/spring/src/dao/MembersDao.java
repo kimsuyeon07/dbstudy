@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import dto.MembersDto;
 
@@ -182,6 +184,7 @@ public class MembersDao {  // DataBase에 접근하는 클래스
 			ps.setString(1, mId);
 			rs = ps.executeQuery();
 			if (rs.next()) {
+//				dto = new MembersDto(mNo, mId, mName, mEmail, mDate);
 				dto = new MembersDto(rs.getLong(1), 
 									 rs.getString(2), 
 									 rs.getString(3), 
@@ -200,6 +203,27 @@ public class MembersDao {  // DataBase에 접근하는 클래스
 	
 	
 	// 전체 검색
+	public List<MembersDto> selectMembersList(){
+		List<MembersDto> list = new ArrayList<MembersDto>();
+		try {
+			con = getConnection();
+			sql = "SELECT MNO, MID, MNAME, MEMAIL, MDATE FROM MEMBERS";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				list.add(new MembersDto(rs.getLong("MNO"), 
+										rs.getString("MID"), 
+										rs.getString("MNAME"), 
+										rs.getString("MEMAIL"), 
+										rs.getDate("MDATE")));
+			}
+		} catch (Exception e) {
+			 e.printStackTrace();
+		} finally {
+			close(con, ps, rs);
+		}
+		return list;
+	}
 	
 	// 
 	

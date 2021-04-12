@@ -1,5 +1,6 @@
 package main;
 
+import java.util.List;
 import java.util.Scanner;
 
 import dao.MembersDao;
@@ -23,6 +24,7 @@ public class MembersHandler {
 		System.out.println("3. 수정");
 		System.out.println("4. 아이디 찾기");
 		System.out.println("5. 회원 검색");
+		System.out.println("6. 전체 회원 조회");
 		System.out.println("==============");
 	}
 	
@@ -37,6 +39,7 @@ public class MembersHandler {
 			case 3: modify(); break;
 			case 4: findID(); break;
 			case 5: inquiryMember(); break;
+			case 6: inquiryAll(); break;
 			default: System.out.println("잘못된 번호입니다. 다시입력하세요.");
 			}
 		}
@@ -144,7 +147,15 @@ public class MembersHandler {
 	}
 	
 	
-	
+	// inquiryAll() : 전체 회원 조회
+	public void inquiryAll() {
+		List<MembersDto> list = dao.selectMembersList();
+		System.out.println("전체 회원 수 : " + list.size() + "명");
+		// 출력
+		for (MembersDto dto : list) {
+			System.out.println(dto);
+		}
+	}
 	
 	
 	
