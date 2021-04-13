@@ -340,6 +340,21 @@ END;
 
 
 
+-- 모든 예외처리
+DECLARE
+    v_last_name VARCHAR2(25);  -- 칼럼의 타입보다 크거나 같으면 이상이 없음. 
+BEGIN
+    SELECT last_name INTO v_last_name
+      FROM employees
+     -- WHERE employee_id = 1;  -- 없는 사원 => 에러메시지가 뜨는 SQL문
+     WHERE department_id = 50;
+    dbms_output.put_line('결과 : ' || v_last_name);
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('예외 코드 : ' || SQLCODE);   -- [SQLCODE] : 오류를 출력해준다(코드)
+        dbms_output.put_line('예외 메시지 : ' || SQLERRM); -- [SQLERRM] : 오류를 출력해준다(메시지)
+END;
+
 
 
 
