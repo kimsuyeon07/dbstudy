@@ -120,11 +120,25 @@ select (salary * commision_pct) as commission
 
 
 -- 23. 가장 오래 전에 입사(hire_date)한 직원부터 최근에 입사한 직원 순으로 last_name, hire_date 를 조회한다.
+select last_name, hire_date
+  from employees
+ order by hire_date;
 
 
 -- 24. 부서번호(department_id)가 20, 50 인 부서에서 근무하는 모든 사원들의 부서번호의 오름차순으로 조회하되,
 -- 같은 부서번호 내에서는 last_name 의 알파벳순으로 조회한다.
+select department_id
+     , last_name
+  from employees
+ where department_id in (20, 50)
+ order by department_id, last_name;
 
 
 -- 25. 커미션(commission_pct)을 받는 모든 사원들의 last_name, salary, commission_pct 을 조회한다.
 -- 연봉이 높은 사원을 먼저 조회하고 같은 연봉의 사원들은 커미션이 높은 사원을 먼저 조회한다.
+select last_name
+     , salary
+     , commission_pct
+  from employees
+ where commission_pct IS NOT NULL
+ order by salary desc, commission_pct desc;
