@@ -1,24 +1,34 @@
 ﻿-- << employees 테이블 >> --
 
 -- 1. 전체 사원의 모든 칼럼을 조회한다.
+select * from employees;
 
 -- 2. 전체 사원의 first_name, last_name, job_id 를 조회한다.
+select first_name, last_name, job_id from employees;
 
 -- 3. 연봉(salary)이 12000 이상되는 사원들의 last_name, salary 를 조회한다.
+select last_name, salary from employees where salary >= 12000;
 
 -- 4. 사원번호(employee_id)가 150 인 사원의 last_name, department_id 를 조회한다.
+select last_name, department_id from employees where employee_id = 150;
 
 -- 5. 커미션(commission_pct)을 받는 모든 사원들의 last_name, salary, commission_pct 를 조회한다.
+select last_name, salary, commission_pct from employees where commission_pct IS NOT NULL;
 
 -- 6. 모든 사원들의 last_name, commission_pct 를 조회하되 커미션(commission_pct)이 없는 사원은 0으로 처리하여 조회한다.
+select last_name, NVL(commission_pct, 0) from employees
 
 -- 7. 커미션(commission_pct)이 없는 사원들은 0으로 처리하고, 커미션이 있는 사원들은 기존 커미션보다 10% 인상된 상태로 조회한다.
-
+--  NVL2(표현식, NOT NULL, NULL) 함수
+select last_name, NVL2(commission_pct, commission_pct * 1.1 , 0) from employees;
 
 -- 8. 연봉(salary)이 5000 에서 12000 인 범위의 사원들의 first_name, last_name, salary 를 조회한다.
-
+select first_name, last_name, salary 
+  from employees
+ where salary between 5000 and 12000;
 
 -- 9. 연봉(salary)이 5000 에서 12000 사이의 범위가 아닌 사원들의 first_name, last_name, salary 를 조회한다.
+
 
 
 -- 10. 직업(job_id)이 SA_REP 이나 ST_CLERK 인 사원들의 전체 칼럼을 조회한다.

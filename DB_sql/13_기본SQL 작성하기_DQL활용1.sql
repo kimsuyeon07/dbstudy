@@ -27,11 +27,11 @@ select emp.first_name, emp.last_name, emp.job_id
 
 -- 3. 연봉(salary)이 12000 이상되는 사원들의 last_name, salary 를 조회한다.
 select last_name, salary
-  from employees;
+  from employees
 where salary >= 12000;
 
 select e.last_name, e.salary
-  from employees e ;
+  from employees e 
 where e.salary >= 12000;
 
 --                 실행순서
