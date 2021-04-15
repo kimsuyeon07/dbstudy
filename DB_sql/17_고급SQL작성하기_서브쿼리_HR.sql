@@ -17,6 +17,13 @@ select t.last_name
   from employees t;                                              --        1.
 
 
+select e.LAST_NAME
+     , e.SALARY
+     ,(select round(avg(me.salary), 2)
+         from employees me
+        where me.department_id = e.department_id)as 본인부서_평균연봉
+  from employees e;
+
     
 -- 2. 부서(DEPARTMENT_ID)별로 DEPARTMENT_ID (dept), DEPARTMENT_NAME (dept), 평균연봉 (emp)을 조회하시오.
 -- ** 서브쿼리 / 일반쿼리 중 => 성능 상으로 일반쿼리로 작성하는 것이 좋다.
@@ -26,6 +33,8 @@ select round(avg(e.salary))
   from employees e inner join departments d
     on e.department_id = d.department_id
 */
+
+
 select d.department_id
      , d.department_name
      , (select round(avg(e.salary))

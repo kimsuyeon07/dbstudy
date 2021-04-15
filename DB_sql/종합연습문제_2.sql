@@ -24,35 +24,56 @@ CREATE TABLE BUYS (
 );
 
 1. 적절한 기본키와 외래키를 지정하시오.
+alter table USERS add constraint users_pk primary key(USER_NO);
+alter table BUYS add constraint buys_pk primary key(BUY_NO);
+alter table BUYS add constraint buys_users_fk foreign key(USER_ID) references USERS(USER_ID);
 
 2. 아래 INSERT문에서 사용되고 있는 사용자번호와 구매번호 대신 사용할 시퀀스를 생성하고 이를 INSERT문에 적용한 뒤 INSERT문을 실행하시오.
+drop sequence users_seq;
+drop sequence buys_seq;
 
+create sequence users_seq
+increment by 1
+start with 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+create sequence buys_seq
+increment by 1
+start with 1001
+nomaxvalue
+nominvalue
+nocycle
+nocache;
 
 -- USERS 테이블에 레코드(행, ROW) 삽입하기
-INSERT INTO USERS VALUES (1, 'YJS', '유재석', 1972, '서울', '010', '11111111', '08/08/08');
-INSERT INTO USERS VALUES (2, 'KHD', '강호동', 1970, '경북', '011', '22222222', '07/07/07');
-INSERT INTO USERS VALUES (3, 'KKJ', '김국진', 1965, '서울', '019', '33333333', '09/09/09');
-INSERT INTO USERS VALUES (4, 'KYM', '김용만', 1967, '서울', '010', '44444444', '15/05/05');
-INSERT INTO USERS VALUES (5, 'KJD', '김제동', 1974, '경남', NULL, NULL, '13/03/03');
-INSERT INTO USERS VALUES (6, 'NHS', '남희석', 1971, '충남', '016', '55555555', '14/04/04');
-INSERT INTO USERS VALUES (7, 'SDY', '신동엽', 1971, '경기', NULL, NULL, '08/10/10');
-INSERT INTO USERS VALUES (8, 'LHJ', '이휘재', 1972, '경기', '011', '66666666', '06/04/04');
-INSERT INTO USERS VALUES (9, 'LKK', '이경규', 1960, '경남', '018', '77777777', '04/12/12');
-INSERT INTO USERS VALUES (10, 'PSH', '박수홍', 1970, '서울', '010', '88888888', '12/05/05');
+INSERT INTO USERS VALUES (users_seq.nextval, 'YJS', '유재석', 1972, '서울', '010', '11111111', '08/08/08');
+INSERT INTO USERS VALUES (users_seq.nextval, 'KHD', '강호동', 1970, '경북', '011', '22222222', '07/07/07');
+INSERT INTO USERS VALUES (users_seq.nextval, 'KKJ', '김국진', 1965, '서울', '019', '33333333', '09/09/09');
+INSERT INTO USERS VALUES (users_seq.nextval, 'KYM', '김용만', 1967, '서울', '010', '44444444', '15/05/05');
+INSERT INTO USERS VALUES (users_seq.nextval, 'KJD', '김제동', 1974, '경남', NULL, NULL, '13/03/03');
+INSERT INTO USERS VALUES (users_seq.nextval, 'NHS', '남희석', 1971, '충남', '016', '55555555', '14/04/04');
+INSERT INTO USERS VALUES (users_seq.nextval, 'SDY', '신동엽', 1971, '경기', NULL, NULL, '08/10/10');
+INSERT INTO USERS VALUES (users_seq.nextval, 'LHJ', '이휘재', 1972, '경기', '011', '66666666', '06/04/04');
+INSERT INTO USERS VALUES (users_seq.nextval, 'LKK', '이경규', 1960, '경남', '018', '77777777', '04/12/12');
+INSERT INTO USERS VALUES (users_seq.nextval, 'PSH', '박수홍', 1970, '서울', '010', '88888888', '12/05/05');
 
 -- BUYS 테이블에 레코드(행, ROW) 삽입하기
-INSERT INTO BUYS VALUES (1001, 'KHD', '운동화', '신발', 30, 2);
-INSERT INTO BUYS VALUES (1002, 'KHD', '노트북', '전자', 1000, 1);
-INSERT INTO BUYS VALUES (1003, 'KYM', '모니터', '전자', 200, 1);
-INSERT INTO BUYS VALUES (1004, 'PSH', '모니터', '전자', 200, 5);
-INSERT INTO BUYS VALUES (1005, 'KHD', '청바지', '의류', 50, 3);
-INSERT INTO BUYS VALUES (1006, 'PSH', '메모리', '전자', 80, 10);
-INSERT INTO BUYS VALUES (1007, 'KJD', '책', '의류', 15, 5);
-INSERT INTO BUYS VALUES (1008, 'LHJ', '책', '서적', 15, 2);
-INSERT INTO BUYS VALUES (1009, 'LHJ', '청바지', '의류', 50, 1);
-INSERT INTO BUYS VALUES (1010, 'PSH', '운동화', '신발', 30, 2);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'KHD', '운동화', '신발', 30, 2);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'KHD', '노트북', '전자', 1000, 1);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'KYM', '모니터', '전자', 200, 1);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'PSH', '모니터', '전자', 200, 5);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'KHD', '청바지', '의류', 50, 3);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'PSH', '메모리', '전자', 80, 10);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'KJD', '책', '의류', 15, 5);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'LHJ', '책', '서적', 15, 2);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'LHJ', '청바지', '의류', 50, 1);
+INSERT INTO BUYS VALUES (buys_seq.nextval, 'PSH', '운동화', '신발', 30, 2);
 
 -- 3. 제품명이 '책'인데 제품카테고리가 '서적'이 아닌 구매 목록을 찾아서 제품카테고리를 '서적'으로 수정하시오.
+update BUYS set PROD_CATEGORY = '서적' where PROD_NAME='책';
 
 -- 4. 연락처1이 '011'인 사용자의 연락처1을 '010'으로 수정하시오.
 

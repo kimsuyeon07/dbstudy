@@ -18,15 +18,16 @@ create index idx_name on employee(name);
 
 -- 인덱스 조회
 -- 사용자가 작성한 인덱스 목록 : user_indexs
-desc user_indexs;
+desc user_indexes;
 
 select index_name, uniqueness
-  from user_indexs
+  from user_indexes
  where table_name = 'DEPARTMENT';
 
 
+
 select index_name, uniqueness
-  from user_indexs
+  from user_indexes
  where table_name = 'EMPLOYEE';
 
 
